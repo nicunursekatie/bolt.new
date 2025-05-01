@@ -30,30 +30,33 @@ export function binDates(_list: ChatHistoryItem[]) {
 }
 
 function dateCategory(date: Date) {
-  if (isToday(date)) {
+  const now = new Date();
+  const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+
+  if (isToday(localDate)) {
     return 'Today';
   }
 
-  if (isYesterday(date)) {
+  if (isYesterday(localDate)) {
     return 'Yesterday';
   }
 
-  if (isThisWeek(date)) {
+  if (isThisWeek(localDate)) {
     // e.g., "Monday"
-    return format(date, 'eeee');
+    return format(localDate, 'eeee');
   }
 
-  const thirtyDaysAgo = subDays(new Date(), 30);
+  const thirtyDaysAgo = subDays(now, 30);
 
-  if (isAfter(date, thirtyDaysAgo)) {
+  if (isAfter(localDate, thirtyDaysAgo)) {
     return 'Last 30 Days';
   }
 
-  if (isThisYear(date)) {
+  if (isThisYear(localDate)) {
     // e.g., "July"
-    return format(date, 'MMMM');
+    return format(localDate, 'MMMM');
   }
 
   // e.g., "July 2023"
-  return format(date, 'MMMM yyyy');
+  return format(localDate, 'MMMM yyyy');
 }
